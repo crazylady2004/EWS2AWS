@@ -39,4 +39,15 @@ copie:
 
 
 
+instance:
+	aws ec2 run-instances \
+	--region eu-central-1 \
+	--image-id ami-0766f68f0b06ab145 \
+	--count 1 \
+	--instance-type t2.micro \
+	--key-name "EPFLWP" \
+	--security-group-ids sg-047ff554f42b5c778 \
+	--subnet-id subnet-0184f0a9a41ae5092 \
+	--tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=servtest2}]'\
+	--user-data file://my_script.txt
 
