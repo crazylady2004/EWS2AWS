@@ -66,3 +66,10 @@ Modification_url:
 	cd ~ && \
 	tar -czvf new_epfl2.tar.gz /Users/dorer/srv
 
+Send_fils_to_AWS:
+	scp new_epfl2.tar.gz ec2-user@3.71.18.60:/home/ec2-user && \
+	scp wp6.tar.gz ec2-user@3.71.18.60:/home/ec2-user && \
+	ssh ec2-user@3.71.18.60 '(\
+		sudo mv new_epfl2.tar.gz /var/www/html && \
+		sudo mv wp6.tar.gz. /var/www/html && \
+		sudo mv epfl_camp.tar.gz /var/www/html )'
