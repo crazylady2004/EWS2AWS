@@ -1,31 +1,34 @@
+
+
+
 Tar_and_export_DB_and_WP_on_server_EPFL:
 	ssh wp-prod '( \
 	 cd /tmp && \
 	 wp db export EPFL_DB_2_AWS.sql --path=/srv/www/www.epfl.ch/htdocs && \
-	 tar -czvf epfl2.tar.gz 	/srv/www/www.epfl.ch/htdocs/wp \
-					/srv/www/www.epfl.ch/htdocs/wp-admin \
-					/srv/www/www.epfl.ch/htdocs/wp-config.php \
-					/srv/www/www.epfl.ch/htdocs/wp-content \
-					/srv/www/www.epfl.ch/htdocs/wp-cron.php \
-					/srv/www/www.epfl.ch/htdocs/wp-includes \
-					/srv/www/www.epfl.ch/htdocs/wp-load.php \
-					/srv/www/www.epfl.ch/htdocs/wp-login.php \
-					/srv/www/www.epfl.ch/htdocs/wp-settings.php \
-					/srv/www/www.epfl.ch/htdocs/.htaccess \
-					/srv/www/www.epfl.ch/htdocs/index.php && \
+	 tar -czvf epfl2.tar.gz -C /srv/www/www.epfl.ch/htdocs/ wp \
+					wp-admin \
+					wp-config.php \
+					wp-content \
+					wp-cron.php \
+					wp-includes \
+					wp-load.php \
+					wp-login.php \
+					wp-settings.php \
+					.htaccess \
+					index.php && \
 	tar -czvf wp6.tar.gz /wp && \
 	wp db export EPFL_campus_DB_2_AWS.sql --path=/srv/www/www.epfl.ch/htdocs/campus && \
-	tar -czvf epfl_camp.tar.gz 	/srv/www/www.epfl.ch/htdocs/campus/wp \
-					/srv/www/www.epfl.ch/htdocs/campus/wp-admin \
-					/srv/www/www.epfl.ch/htdocs/campus/wp-config.php \
-					/srv/www/www.epfl.ch/htdocs/campus/wp-content \
-					/srv/www/www.epfl.ch/htdocs/campus/wp-cron.php \
-					/srv/www/www.epfl.ch/htdocs/campus/wp-includes \
-					/srv/www/www.epfl.ch/htdocs/campus/wp-load.php \
-					/srv/www/www.epfl.ch/htdocs/campus/wp-login.php \
-					/srv/www/www.epfl.ch/htdocs/campus/wp-settings.php \
-					/srv/www/www.epfl.ch/htdocs/campus/.htaccess \
-					/srv/www/www.epfl.ch/htdocs/campus/index.php)'
+	tar -czvf epfl_camp.tar.gz -C /srv/www/www.epfl.ch/htdocs/campus/ wp \
+					wp-admin \
+					wp-config.php \
+					wp-content \
+					wp-cron.php \
+					wp-includes \
+					wp-load.php \
+					wp-login.php \
+					wp-settings.php \
+					.htaccess \
+					index.php)'
 
 
 send_fils_to_local:
@@ -44,20 +47,20 @@ Creation_instance:
 	--count 1 \
 	--instance-type t2.micro \
 	--key-name "EPFLWP" \
-	--security-group-ids sg-047ff554f42b5c778 \
+	--security-group-ids sg-041a0583b9eb05990 \
 	--subnet-id subnet-0184f0a9a41ae5092 \
-	--tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=aws-fsd-team}]'\
+	--tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value="awsfsdteam3"}]' \
 	--user-data file://installation_2_base.txt
 
 Creation_DB:
 	aws rds create-db-instance \
-  	--db-instance-identifier db_aws_fsd_team \
+  	--db-instance-identifier dbawsfsdteam \
   	--db-instance-class db.t2.micro \
   	--engine mysql \
   	--master-username admin \
   	--master-user-password 12345678 \
 	--allocated-storage 20 \
-	--vpc-security-group-ids vpc-0f3eebc1c0ee0af30
+
 
 Modification_url:
 	cat EPFL_DB_2_AWS.sql | sed 's,https://www.epfl.ch,http://aws.fsd.team,g' > new_db_epfl_aws.sql && \
@@ -73,7 +76,7 @@ Modification_url:
 	
 Creation_IP_fix:
 	aws ec2 allocate-address && \
-	aws ec2 associate-address --instance-id i-02253eb414fdc3d61 --public-ip 18.159.193.59
+	aws ec2 associate-address --instance-id i-0462f7f8c2b23872d --public-ip 18.159.193.60
 
 Send_fils_to_AWS:
 	scp new_epfl2.tar.gz ec2-user@18.159.193.59:/home/ec2-user && \
