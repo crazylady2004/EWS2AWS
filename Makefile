@@ -5,7 +5,7 @@ Tar_and_export_DB_and_WP_on_server_EPFL:
 	ssh wp-prod '( \
 	 cd /tmp && \
 	 wp db export EPFL_DB_2_AWS.sql --path=/srv/www/www.epfl.ch/htdocs && \
-	 tar -czvf epfl2.tar.gz -C /srv/www/www.epfl.ch/htdocs/ wp \
+	 tar --exclude=accred --exclude=tequila --exclude=polylang -czvf epfl2.tar.gz -C /srv/www/www.epfl.ch/htdocs/ wp \
 					wp-admin \
 					wp-config.php \
 					wp-content \
@@ -18,7 +18,7 @@ Tar_and_export_DB_and_WP_on_server_EPFL:
 					index.php && \
 	tar -czvf wp6.tar.gz /wp && \
 	wp db export EPFL_campus_DB_2_AWS.sql --path=/srv/www/www.epfl.ch/htdocs/campus && \
-	tar -czvf epfl_camp.tar.gz -C /srv/www/www.epfl.ch/htdocs/campus/ wp \
+	tar --exclude=accred --exclude=tequila --exclude=polylang -czvf epfl_camp.tar.gz -C /srv/www/www.epfl.ch/htdocs/campus/ wp \
 					wp-admin \
 					wp-config.php \
 					wp-content \
